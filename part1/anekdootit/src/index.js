@@ -4,10 +4,19 @@ import './index.css'
 
 const App = (props) => {
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(new Array(props.anecdotes.length).fill(0))
+
+  const handleClick = () => {
+    const votesCopy = [...votes]
+    votesCopy[selected] += 1
+    setVotes(votesCopy)
+  }
 
   return (
     <div>
       <p>{props.anecdotes[selected]}</p>
+      <p>has {votes[selected]} votes</p>
+      <button onClick={handleClick}>vote</button>
       <button
         onClick={() => {
           setSelected(Math.floor(Math.random() * anecdotes.length))
