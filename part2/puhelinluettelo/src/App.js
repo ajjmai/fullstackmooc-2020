@@ -25,10 +25,15 @@ const App = () => {
         name: newName,
         number: newNumber,
       }
-      setPersons(persons.concat(newPersonObject))
+
+      axios
+        .post('http://localhost:3001/persons', newPersonObject)
+        .then((response) => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+        })
     }
-    setNewName('')
-    setNewNumber('')
   }
 
   const handleNameChange = (event) => {
