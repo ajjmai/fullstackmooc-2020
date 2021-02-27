@@ -1,10 +1,24 @@
 import React from 'react'
+import Country from './Country'
 
-const Countries = ({ countries }) => {
+const Countries = ({ countries, setFilterBy }) => {
+  if (countries.length === 1) {
+    return <Country country={countries[0]} />
+  }
+
   return (
     <div>
       {countries.map((country) => (
-        <p key={country.name}>{country.name}</p>
+        <div key={country.name}>
+          {country.name}{' '}
+          <button
+            onClick={() => {
+              setFilterBy(country.name.toLowerCase())
+            }}
+          >
+            show
+          </button>
+        </div>
       ))}
     </div>
   )

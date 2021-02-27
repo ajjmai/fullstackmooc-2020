@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Filter = ({ filterBy, filterCountries }) => {
+const Filter = ({ filterCountries }) => {
   return (
     <div>
-      find countries <input value={filterBy} onChange={filterCountries} />
+      find countries <input onChange={filterCountries} />
     </div>
   )
 }

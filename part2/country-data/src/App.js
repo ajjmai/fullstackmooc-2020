@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Filter from './components/Filter'
 import Countries from './components/Countries'
-import Country from './components/Country'
 
 function App() {
   const [countryData, setCountryData] = useState([])
@@ -16,7 +15,11 @@ function App() {
   }, [])
 
   const filterCountries = (event) => {
-    setFilterBy(event.target.value)
+    if (event.target.value) {
+      setFilterBy(event.target.value)
+    } else {
+      setFilterBy('')
+    }
   }
 
   const countriesToShow = countryData.filter((country) =>
@@ -26,9 +29,8 @@ function App() {
   return (
     <div>
       <Filter filterBy={filterBy} filterCountries={filterCountries} />
-      {countriesToShow.length === 1 && <Country country={countriesToShow[0]} />}
-      {countriesToShow.length < 10 && countriesToShow.length > 1 && (
-        <Countries countries={countriesToShow} />
+      {countriesToShow.length < 10 && (
+        <Countries countries={countriesToShow} setFilterBy={setFilterBy} />
       )}
       {countriesToShow.length > 10 && (
         <p>Too many matches, specify another filter.</p>
