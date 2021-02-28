@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filterBy, setFilterBy] = useState('')
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => setPersons(initialPersons))
@@ -38,6 +39,14 @@ const App = () => {
               setNotificationMessage(null)
             }, 5000)
           })
+          .catch(() => {
+            setErrorMessage(
+              `Information of ${newName} was already removed from the server`
+            )
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+            setPersons(persons.filter((person) => person.name !== newName))
           })
       }
     } else {
@@ -78,6 +87,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={notificationMessage} className='notification' />
+      <Notification message={errorMessage} className='error' />
       <Filter filterBy={filterBy} filterPersons={filterPersons} />
       <h2>Add a new</h2>
       <PersonForm
