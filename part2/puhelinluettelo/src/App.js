@@ -55,13 +55,22 @@ const App = () => {
         number: newNumber,
       }
 
-      personService.create(newPersonObject).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson))
-        setNotificationMessage(`Added ${newName}`)
-        setTimeout(() => {
-          setNotificationMessage(null)
-        }, 5000)
-      })
+      personService
+        .create(newPersonObject)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson))
+          setNotificationMessage(`Added ${newName}`)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+        })
+        .catch((error) => {
+          console.log(error.response.data)
+          setErrorMessage(error.response.data.error)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
     }
     setNewName('')
     setNewNumber('')
