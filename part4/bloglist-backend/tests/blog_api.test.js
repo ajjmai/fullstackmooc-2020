@@ -46,7 +46,7 @@ test('a valid blog can be added', async () => {
   await api
     .post('/api/blogs')
     .send(newBlog)
-    .expect(200)
+    .expect(201)
     .expect('Content-Type', /application\/json/)
 
   const response = await api.get('/api/blogs')
@@ -54,6 +54,23 @@ test('a valid blog can be added', async () => {
 
   expect(response.body).toHaveLength(listWithManyBlogs.length + 1)
   expect(titles).toContain(newBlog.title)
+})
+
+test('likes is 0 if no initial value is given', async () => {
+  const newBlog = {
+    title: 'The semantic future of the web',
+    author: 'James Turner',
+    url:
+      'https://stackoverflow.blog/2020/12/10/the-semantic-future-of-the-web/',
+  }
+
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  expect(response.body.likes).toBe(0)
 })
 
 afterAll(() => {
