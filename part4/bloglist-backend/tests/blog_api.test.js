@@ -34,6 +34,28 @@ test('blogs contain field "id"', async () => {
   expect(response.body[0].id).toBeDefined()
 })
 
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'How to write a React Component in TypeScript',
+    author: 'Ken C. Dodds',
+    url:
+      'https://kentcdodds.com/blog/how-to-write-a-react-component-in-typescript',
+    likes: 5,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  const titles = response.body.map((blog) => blog.title)
+
+  expect(response.body).toHaveLength(listWithManyBlogs.length + 1)
+  expect(titles).toContain(newBlog.title)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
