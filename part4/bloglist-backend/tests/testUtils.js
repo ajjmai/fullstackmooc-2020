@@ -1,3 +1,10 @@
+const Blog = require('../models/blog')
+
+const blogsInDb = async () => {
+  const blogs = await Blog.find({})
+  return blogs.map((blog) => blog.toJSON())
+}
+
 const listWithOneBlog = [
   {
     title: 'Go To Statement Considered Harmful',
@@ -66,4 +73,9 @@ const listWithManyBlogs = [
   },
 ]
 
-module.exports = { listWithOneBlog, listWithTwoBlogs, listWithManyBlogs }
+module.exports = {
+  blogsInDb,
+  listWithOneBlog,
+  listWithTwoBlogs,
+  listWithManyBlogs,
+}
