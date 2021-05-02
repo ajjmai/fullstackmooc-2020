@@ -4,6 +4,13 @@ const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
 
+if (process.argv.length < 3) {
+  console.log('give password as argument')
+  process.exit(1)
+}
+
+const password = process.argv[2]
+
 const blogSchema = mongoose.Schema({
   title: String,
   author: String,
@@ -13,7 +20,7 @@ const blogSchema = mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-const mongoUrl = 'mongodb://localhost/bloglist'
+const mongoUrl = `mongodb+srv://user:${password}@fullstack2021.rcvs5.mongodb.net/bloglist?retryWrites=true&w=majority`
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
