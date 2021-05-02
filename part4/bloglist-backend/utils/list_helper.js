@@ -1,4 +1,6 @@
-/* eslint-disable no-unused-vars */
+const _ = require('lodash')
+
+// eslint-disable-next-line no-unused-vars
 const dummy = (blogs) => {
   return 1
 }
@@ -17,8 +19,8 @@ const favoriteBlog = (blogs) => {
   const favoriteReducer = (currentFavorite, nextItem) => {
     return currentFavorite.likes < nextItem.likes ? nextItem : currentFavorite
   }
-
   const favorite = blogs.reduce(favoriteReducer, blogs[0])
+
   return {
     title: favorite.title,
     author: favorite.author,
@@ -26,8 +28,18 @@ const favoriteBlog = (blogs) => {
   }
 }
 
+const mostBlogs = (blogs) => {
+  if (blogs.length < 1) return {}
+
+  return _.zipObject(
+    ['author', 'blogs'],
+    _.chain(blogs).countBy('author').toPairs().max(_.last).toArray().value()
+  )
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 }

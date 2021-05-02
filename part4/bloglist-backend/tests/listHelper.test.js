@@ -62,3 +62,34 @@ describe('favoriteBlog', () => {
     })
   })
 })
+
+describe('mostBlogs', () => {
+  test('there is none when list is empty', () => {
+    const result = listHelper.mostBlogs([])
+    expect(result).toEqual({})
+  })
+
+  test('equals that author when list has only one blog', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    expect(result).toEqual({
+      author: listWithOneBlog[0].author,
+      blogs: 1,
+    })
+  })
+
+  test('equals one of the blogs when list has two authors with as many blogs', () => {
+    const result = listHelper.mostBlogs(listWithTwoBlogs)
+    expect(result).toEqual({
+      author: listWithTwoBlogs[0].author,
+      blogs: 1,
+    })
+  })
+
+  test('is calculated right when list has many blogs', () => {
+    const result = listHelper.mostBlogs(listWithManyBlogs)
+    expect(result).toEqual({
+      author: 'Robert C. Martin',
+      blogs: 3,
+    })
+  })
+})
