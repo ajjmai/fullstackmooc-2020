@@ -5,6 +5,14 @@ const blogsInDb = async () => {
   return blogs.map((blog) => blog.toJSON())
 }
 
+const nonExistingId = async () => {
+  const blog = new Blog({ title: 'test', author: 'test', url: 'none' })
+  await blog.save()
+  await blog.remove()
+
+  return blog._id.toString()
+}
+
 const listWithOneBlog = [
   {
     title: 'Go To Statement Considered Harmful',
@@ -75,6 +83,7 @@ const listWithManyBlogs = [
 
 module.exports = {
   blogsInDb,
+  nonExistingId,
   listWithOneBlog,
   listWithTwoBlogs,
   listWithManyBlogs,
