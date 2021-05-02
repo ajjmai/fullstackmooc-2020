@@ -75,9 +75,15 @@ describe('when there are initially some blogs saved', () => {
         likes: 1,
       }
 
-      await api.post('/api/blogs').send(newBlog).expect(400)
-      const blogsAtEnd = await helper.blogsInDb()
+      const result = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
 
+      expect(result.body.error).toContain('`title` is required')
+
+      const blogsAtEnd = await helper.blogsInDb()
       expect(blogsAtEnd).toHaveLength(helper.listWithManyBlogs.length)
     })
 
@@ -88,10 +94,32 @@ describe('when there are initially some blogs saved', () => {
         likes: 1,
       }
 
-      await api.post('/api/blogs').send(newBlog).expect(400)
-      const blogsAtEnd = await helper.blogsInDb()
+      const result = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
 
+      expect(result.body.error).toContain('`url` is required')
+
+      const blogsAtEnd = await helper.blogsInDb()
       expect(blogsAtEnd).toHaveLength(helper.listWithManyBlogs.length)
+    })
+  })
+
+  describe('editing a blog', () => {
+    test('should succeed with status code 200 with a valid id', async () => {
+      const blogsAtStart = await helper.blogsInDb()
+      const blogToEdit = blogsAtStart[0]
+      const editedBlog = { ...blogToEdit, likes: blogToEdit.likes + 5 }
+
+      const response = await api
+        .put(`/api/blogs/${blogToEdit.id}`)
+        .send(editedBlog)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      expect(response.body.likes).toBe(blogToEdit.likes + 5)
     })
   })
 
@@ -110,7 +138,10 @@ describe('when there are initially some blogs saved', () => {
     })
 
     test('should fail with status code 400 with invalid id', async () => {
-      await api.delete(`/api/blogs/${helper.nonExistingId}`).expect(400)
+      await api
+        .delete(`/api/blogs/${helper.nonExistingId}`)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
 
       const blogsAtEnd = await helper.blogsInDb()
       expect(blogsAtEnd).toHaveLength(helper.listWithManyBlogs.length)
