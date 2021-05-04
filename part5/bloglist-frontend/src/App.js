@@ -77,6 +77,24 @@ const App = () => {
     }
   }
 
+  const likeBlog = async (blogObject) => {
+    try {
+      const returnedBlog = await blogService.update({
+        ...blogObject,
+        user: blogObject.user.id,
+      })
+      const updatedBlog = { ...returnedBlog, user: blogObject.user }
+      setBlogs(
+        blogs.map((blog) => (blog.id !== returnedBlog.id ? blog : updatedBlog))
+      )
+    } catch (exeption) {
+      setErrorMessage('Updating blog failed.')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
   const bloglist = () => (
     <>
       <div>
@@ -89,7 +107,7 @@ const App = () => {
       <h2>Blogs</h2>
 
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
       ))}
     </>
   )
