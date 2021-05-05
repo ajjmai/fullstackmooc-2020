@@ -38,16 +38,19 @@ const App = () => {
   const handleLogin = async (userObject) => {
     try {
       const loggedInUser = await loginService.login(userObject)
+      window.localStorage.setItem(
+        'loggedBloglistUser',
+        JSON.stringify(loggedInUser)
+      )
+      blogService.setToken(loggedInUser.token)
+      setUser(loggedInUser)
+
       setNotificationMessage(
         `Hello ${loggedInUser.name}! You have succesfully logged in.`
       )
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
-      window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
-
-      blogService.setToken(loggedInUser.token)
-      setUser(loggedInUser)
     } catch (exception) {
       setErrorMessage('Wrong username or password.')
       setTimeout(() => {
@@ -105,6 +108,33 @@ const App = () => {
     }
   }
 
+  const removeBlog = async (blogToDelete) => {
+    if (
+      window.confirm(
+        `Remove blog ${blogToDelete.title} by ${blogToDelete.author}?`
+      )
+    ) {
+      try {
+        await blogService.remove(blogToDelete.id)
+        setBlogs(blogs.filter((blog) => blog.id !== blogToDelete.id))
+
+        setNotificationMessage(
+          `Removed ${blogToDelete.title} by ${blogToDelete.author}.`
+        )
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
+      } catch (exeption) {
+        setErrorMessage(
+          `Removing ${blogToDelete.title} by ${blogToDelete.author} failed.`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      }
+    }
+  }
+
   const bloglist = () => (
     <>
       <div>
@@ -117,7 +147,13 @@ const App = () => {
       <h2>Blogs</h2>
 
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} likeBlog={likeBlog} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          likeBlog={likeBlog}
+          loggedInUsername={user.username}
+          removeBlog={removeBlog}
+        />
       ))}
     </>
   )
