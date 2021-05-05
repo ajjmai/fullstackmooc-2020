@@ -14,8 +14,16 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const blogFormRef = useRef()
 
+  function sortBlogs(a, b) {
+    return b.likes - a.likes
+  }
+
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    async function fetchBlogs() {
+      const returnedBlogs = await blogService.getAll()
+      setBlogs(returnedBlogs.sort(sortBlogs))
+    }
+    fetchBlogs()
   }, [])
 
   useEffect(() => {
@@ -62,13 +70,13 @@ const App = () => {
     try {
       blogFormRef.current.toggleVisibility()
       const returnedBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(returnedBlog).sort(sortBlogs))
       setNotificationMessage(
         `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
       )
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
-      setBlogs(blogs.concat(returnedBlog))
     } catch (exeption) {
       setErrorMessage('Adding blog failed.')
       setTimeout(() => {
@@ -85,7 +93,9 @@ const App = () => {
       })
       const updatedBlog = { ...returnedBlog, user: blogObject.user }
       setBlogs(
-        blogs.map((blog) => (blog.id !== returnedBlog.id ? blog : updatedBlog))
+        blogs
+          .map((blog) => (blog.id !== returnedBlog.id ? blog : updatedBlog))
+          .sort(sortBlogs)
       )
     } catch (exeption) {
       setErrorMessage('Updating blog failed.')
