@@ -2,12 +2,19 @@ describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
 
-    const user = {
+    const user1 = {
       name: 'Ada Lovelace',
       username: 'adalove',
       password: 'salainen',
     }
-    cy.request('POST', 'http://localhost:3003/api/users/', user)
+
+    const user2 = {
+      name: 'Grace Hopper',
+      username: 'graceH',
+      password: 'salainen',
+    }
+    cy.request('POST', 'http://localhost:3003/api/users/', user1)
+    cy.request('POST', 'http://localhost:3003/api/users/', user2)
     cy.visit('http://localhost:3000')
   })
 
@@ -40,10 +47,7 @@ describe('Blog app', function () {
 
   describe('When logged in', function () {
     beforeEach(function () {
-      cy.get('input[name="Username"]').type('adalove')
-      cy.get('input[name="Password"]').type('salainen')
-      cy.get('#login-button').click()
-      cy.contains('Ada Lovelace is logged in')
+      cy.login({ username: 'adalove', password: 'salainen' })
     })
 
     it('A blog can be created', function () {
@@ -62,25 +66,55 @@ describe('Blog app', function () {
       cy.contains(blog.title)
     })
 
-    it('A blog can be liked', function () {
-      const blog = {
-        title: 'React patterns',
-        author: 'Michael Chan',
-        url: 'https://reactpatterns.com/',
-      }
+    describe('When there are blogs in the database', function () {
+      beforeEach(function () {
+        cy.createBlog({
+          title: 'React patterns',
+          author: 'Michael Chan',
+          url: 'https://reactpatterns.com/',
+        })
+        cy.createBlog({
+          title: 'First class tests',
+          author: 'Robert C. Martin',
+          url:
+            'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+        })
+        cy.createBlog({
+          title: 'TDD harms architecture',
+          author: 'Robert C. Martin',
+          url:
+            'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+        })
+        cy.createBlog({
+          title: 'Type wars',
+          author: 'Robert C. Martin',
+          url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+        })
+      })
 
-      cy.contains('Add new blog').click()
+      it('A blog can be liked', function () {
+        cy.contains('view').click()
+        cy.contains(/Like$/).click()
+        cy.contains('likes 1')
+        cy.contains(/Like$/).click()
+        cy.contains('likes 2')
+      })
 
-      cy.get('input[name="Title"]').type(blog.title)
-      cy.get('input[name="Author"]').type(blog.author)
-      cy.get('input[name="Url"]').type(blog.url)
-      cy.contains(/^Add$/).click()
+      it('A blog can be deleted by the user who added it', function () {
+        cy.contains('view').click()
+        cy.contains('remove').click()
+        cy.get('.notification').should(
+          'contain',
+          'Removed React patterns by Michael Chan.'
+        )
+      })
 
-      cy.contains('view').click()
-      cy.contains(/Like$/).click()
-      cy.contains('likes 1')
-      cy.contains(/Like$/).click()
-      cy.contains('likes 2')
+      it('A blog cannot be deleted by anyone else', function () {
+        cy.contains('Logout').click()
+        cy.login({ username: 'graceH', password: 'salainen' })
+        cy.contains('view').click()
+        cy.get('body').should('not.contain', 'remove')
+      })
     })
   })
 })
