@@ -61,5 +61,26 @@ describe('Blog app', function () {
       cy.contains(/^Add$/).click()
       cy.contains(blog.title)
     })
+
+    it('A blog can be liked', function () {
+      const blog = {
+        title: 'React patterns',
+        author: 'Michael Chan',
+        url: 'https://reactpatterns.com/',
+      }
+
+      cy.contains('Add new blog').click()
+
+      cy.get('input[name="Title"]').type(blog.title)
+      cy.get('input[name="Author"]').type(blog.author)
+      cy.get('input[name="Url"]').type(blog.url)
+      cy.contains(/^Add$/).click()
+
+      cy.contains('view').click()
+      cy.contains(/Like$/).click()
+      cy.contains('likes 1')
+      cy.contains(/Like$/).click()
+      cy.contains('likes 2')
+    })
   })
 })
