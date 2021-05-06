@@ -37,4 +37,29 @@ describe('Blog app', function () {
       cy.get('.error').should('contain.css', 'color', 'rgb(255, 0, 0)')
     })
   })
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.get('input[name="Username"]').type('adalove')
+      cy.get('input[name="Password"]').type('salainen')
+      cy.get('#login-button').click()
+      cy.contains('Ada Lovelace is logged in')
+    })
+
+    it('A blog can be created', function () {
+      const blog = {
+        title: 'React patterns',
+        author: 'Michael Chan',
+        url: 'https://reactpatterns.com/',
+      }
+
+      cy.contains('Add new blog').click()
+
+      cy.get('input[name="Title"]').type(blog.title)
+      cy.get('input[name="Author"]').type(blog.author)
+      cy.get('input[name="Url"]').type(blog.url)
+      cy.contains(/^Add$/).click()
+      cy.contains(blog.title)
+    })
+  })
 })
