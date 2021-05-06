@@ -110,10 +110,24 @@ describe('Blog app', function () {
       })
 
       it('A blog cannot be deleted by anyone else', function () {
-        cy.contains('Logout').click()
         cy.login({ username: 'graceH', password: 'salainen' })
         cy.contains('view').click()
         cy.get('body').should('not.contain', 'remove')
+      })
+
+      it('Blogs are ordered based on likes', function () {
+        cy.contains('Type wars').contains('view').click()
+        cy.contains('Type wars').contains('Like').click()
+        cy.contains('Blogs').next().should('contain', 'Type wars')
+
+        cy.contains('First class tests').contains('view').click()
+        cy.contains('First class tests').contains('Like').click()
+        cy.contains('First class tests').contains('likes 1')
+
+        cy.contains('First class tests').contains('Like').click()
+        cy.contains('First class tests').contains('likes 2')
+
+        cy.contains('Blogs').next().should('contain', 'First class tests')
       })
     })
   })
