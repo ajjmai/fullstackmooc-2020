@@ -31,12 +31,18 @@ const reducer = (state = initialState, action) => {
         ...anecdoteToVote,
         votes: anecdoteToVote.votes + 1,
       }
-      return state.map((a) => (a.id !== id ? a : votedAnecdote))
+      return state
+        .map((a) => (a.id !== id ? a : votedAnecdote))
+        .sort(sortBasedOnVotes)
     case 'NEW':
-      return [...state, action.data]
+      return [...state, action.data].sort(sortBasedOnVotes)
     default:
       return state
   }
+}
+
+function sortBasedOnVotes(a, b) {
+  return b.votes - a.votes
 }
 
 export const voteAnecdote = (id) => {
