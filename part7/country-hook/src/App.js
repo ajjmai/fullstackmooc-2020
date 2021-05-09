@@ -11,14 +11,25 @@ const useField = (type) => {
   return {
     type,
     value,
-    onChange
+    onChange,
   }
 }
 
 const useCountry = (name) => {
   const [country, setCountry] = useState(null)
 
-  useEffect(() => {})
+  useEffect(() => {
+    async function fetchCountryData() {
+      try {
+        const url = `https://restcountries.eu/rest/v2/name/${name}?fullText=true`
+        const response = await axios.get(url)
+        setCountry({ data: response.data[0], found: true })
+      } catch {
+        setCountry({ data: null, found: false })
+      }
+    }
+    fetchCountryData()
+  }, [name])
 
   return country
 }
@@ -29,19 +40,19 @@ const Country = ({ country }) => {
   }
 
   if (!country.found) {
-    return (
-      <div>
-        not found...
-      </div>
-    )
+    return <div>not found...</div>
   }
 
   return (
     <div>
       <h3>{country.data.name} </h3>
       <div>capital {country.data.capital} </div>
-      <div>population {country.data.population}</div> 
-      <img src={country.data.flag} height='100' alt={`flag of ${country.data.name}`}/>  
+      <div>population {country.data.population}</div>
+      <img
+        src={country.data.flag}
+        height='100'
+        alt={`flag of ${country.data.name}`}
+      />
     </div>
   )
 }
