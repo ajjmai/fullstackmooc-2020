@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
+import { setNotification } from './reducers/notificationReducer'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -8,10 +10,9 @@ import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 
 const App = () => {
+  const dispatch = useDispatch()
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [notificationMessage, setNotificationMessage] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
   const blogFormRef = useRef()
 
   function sortBlogs(a, b) {
@@ -44,18 +45,14 @@ const App = () => {
       )
       blogService.setToken(loggedInUser.token)
       setUser(loggedInUser)
-
-      setNotificationMessage(
-        `Hello ${loggedInUser.name}! You have succesfully logged in.`
+      dispatch(
+        setNotification(
+          `Hello ${loggedInUser.name}! You have succesfully logged in.`,
+          'notification'
+        )
       )
-      setTimeout(() => {
-        setNotificationMessage(null)
-      }, 5000)
     } catch (exception) {
-      setErrorMessage('Wrong username or password.')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotification('Wrong username or password.', 'error'))
     }
   }
 
@@ -63,10 +60,7 @@ const App = () => {
     event.preventDefault()
     window.localStorage.clear()
     setUser(null)
-    setNotificationMessage('Logging out completed.')
-    setTimeout(() => {
-      setNotificationMessage(null)
-    }, 5000)
+    dispatch(setNotification('Logging out completed.', 'notification'))
   }
 
   const createBlog = async (blogObject) => {
@@ -74,17 +68,14 @@ const App = () => {
       blogFormRef.current.toggleVisibility()
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog).sort(sortBlogs))
-      setNotificationMessage(
-        `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`
+      dispatch(
+        setNotification(
+          `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`,
+          'notification'
+        )
       )
-      setTimeout(() => {
-        setNotificationMessage(null)
-      }, 5000)
     } catch (exeption) {
-      setErrorMessage('Adding blog failed.')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotification('Adding blog failed.', 'error'))
     }
   }
 
@@ -101,10 +92,7 @@ const App = () => {
           .sort(sortBlogs)
       )
     } catch (exeption) {
-      setErrorMessage('Updating blog failed.')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotification('Updating blog failed.', 'error'))
     }
   }
 
@@ -117,20 +105,19 @@ const App = () => {
       try {
         await blogService.remove(blogToDelete.id)
         setBlogs(blogs.filter((blog) => blog.id !== blogToDelete.id))
-
-        setNotificationMessage(
-          `Removed ${blogToDelete.title} by ${blogToDelete.author}.`
+        dispatch(
+          setNotification(
+            `Removed ${blogToDelete.title} by ${blogToDelete.author}.`,
+            'notification'
+          )
         )
-        setTimeout(() => {
-          setNotificationMessage(null)
-        }, 5000)
       } catch (exeption) {
-        setErrorMessage(
-          `Removing ${blogToDelete.title} by ${blogToDelete.author} failed.`
+        dispatch(
+          setNotification(
+            `Removing ${blogToDelete.title} by ${blogToDelete.author} failed.`,
+            'error'
+          )
         )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
       }
     }
   }
@@ -161,8 +148,7 @@ const App = () => {
   return (
     <div>
       <h1>Bloglist</h1>
-      <Notification message={notificationMessage} className='notification' />
-      <Notification message={errorMessage} className='error' />
+      <Notification />
       {!user ? <LoginForm handleLogin={handleLogin} /> : bloglist()}
     </div>
   )
