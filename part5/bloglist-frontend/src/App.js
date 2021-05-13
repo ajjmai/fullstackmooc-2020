@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
+import {
+  initialiseBlogs,
+  addBlog,
+  updateBlog,
+  deleteBlog,
+} from './reducers/blogReducer'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -11,21 +17,13 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const dispatch = useDispatch()
-  const [blogs, setBlogs] = useState([])
+  const blogs = useSelector((state) => state.blogs)
   const [user, setUser] = useState(null)
   const blogFormRef = useRef()
 
-  function sortBlogs(a, b) {
-    return b.likes - a.likes
-  }
-
   useEffect(() => {
-    async function fetchBlogs() {
-      const returnedBlogs = await blogService.getAll()
-      setBlogs(returnedBlogs.sort(sortBlogs))
-    }
-    fetchBlogs()
-  }, [])
+    dispatch(initialiseBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
@@ -66,11 +64,10 @@ const App = () => {
   const createBlog = async (blogObject) => {
     try {
       blogFormRef.current.toggleVisibility()
-      const returnedBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(returnedBlog).sort(sortBlogs))
+      dispatch(addBlog(blogObject))
       dispatch(
         setNotification(
-          `A new blog ${returnedBlog.title} by ${returnedBlog.author} added!`,
+          `A new blog ${blogObject.title} by ${blogObject.author} added!`,
           'notification'
         )
       )
@@ -80,17 +77,11 @@ const App = () => {
   }
 
   const likeBlog = async (blogObject) => {
+    const blogCreator = blogObject.user.id
+      ? blogObject.user.id
+      : blogObject.user
     try {
-      const returnedBlog = await blogService.update({
-        ...blogObject,
-        user: blogObject.user.id,
-      })
-      const updatedBlog = { ...returnedBlog, user: blogObject.user }
-      setBlogs(
-        blogs
-          .map((blog) => (blog.id !== returnedBlog.id ? blog : updatedBlog))
-          .sort(sortBlogs)
-      )
+      dispatch(updateBlog(blogObject, blogCreator))
     } catch (exeption) {
       dispatch(setNotification('Updating blog failed.', 'error'))
     }
@@ -103,8 +94,7 @@ const App = () => {
       )
     ) {
       try {
-        await blogService.remove(blogToDelete.id)
-        setBlogs(blogs.filter((blog) => blog.id !== blogToDelete.id))
+        dispatch(deleteBlog(blogToDelete.id))
         dispatch(
           setNotification(
             `Removed ${blogToDelete.title} by ${blogToDelete.author}.`,
@@ -140,6 +130,7 @@ const App = () => {
           likeBlog={likeBlog}
           loggedInUsername={user.username}
           removeBlog={removeBlog}
+          own={user.id === blog.user.id || user.id === blog.user}
         />
       ))}
     </>
