@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Switch, Route, useRouteMatch } from 'react-router-dom'
+import { Switch, Route, useRouteMatch, Link } from 'react-router-dom'
 import { initialiseBlogs, updateBlog, deleteBlog } from './reducers/blogReducer'
 import { initialiseUsers } from './reducers/userReducer'
 import { login, getUserFromToken } from './reducers/loginReducer'
@@ -81,16 +81,31 @@ const App = () => {
     ? blogs.find((blog) => blog.id === blogMatch.params.id)
     : null
 
+  const nav = {
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: 'lightGray',
+  }
+
+  const padding = {
+    padding: 5,
+  }
+
   return (
     <>
       <>
+        <div style={nav}>
+          <Link style={padding} to='/'>
+            blogs
+          </Link>
+          <Link style={padding} to='/users'>
+            users
+          </Link>
+          {loggedInUser && <LoggedUserInfo />}
+        </div>
         <h1>Bloglist</h1>
         <Notification />
-        {!loggedInUser ? (
-          <LoginForm handleLogin={handleLogin} />
-        ) : (
-          <LoggedUserInfo />
-        )}
+        {!loggedInUser && <LoginForm handleLogin={handleLogin} />}
       </>
       <Switch>
         <Route path='/users/:id'>{loggedInUser && <User user={user} />}</Route>
