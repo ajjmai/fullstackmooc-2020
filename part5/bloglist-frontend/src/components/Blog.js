@@ -1,19 +1,9 @@
-import React, { useState } from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, likeBlog, own, removeBlog }) => {
-  const [expand, setExpand] = useState(false)
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  }
-
-  const handleExpand = () => {
-    setExpand(!expand)
+const Blog = ({ blog, likeBlog, loggedInUserId, removeBlog }) => {
+  if (!blog) {
+    return null
   }
 
   const handleLikes = (event) => {
@@ -26,31 +16,32 @@ const Blog = ({ blog, likeBlog, own, removeBlog }) => {
     removeBlog(blog)
   }
 
-  const fullInfo = () => (
+  const own = blog.user.id
+    ? loggedInUserId === blog.user.id
+    : loggedInUserId === blog.user
+
+  const creator = useMemo(() => blog.user.name, [])
+
+  return (
     <>
+      <h2>
+        {blog.title} by {blog.author}
+      </h2>
       <p>{blog.url}</p>
       <p>
         likes {blog.likes}
         <button onClick={handleLikes}>Like</button>
       </p>
-      <p>{blog.user.name}</p>
+      <p>{creator}</p>
       {own && <button onClick={handleRemove}>remove</button>}
     </>
-  )
-
-  return (
-    <div style={blogStyle}>
-      {blog.title} by {blog.author}{' '}
-      <button onClick={handleExpand}>{expand ? 'hide' : 'view'}</button>
-      {expand && fullInfo()}
-    </div>
   )
 }
 
 Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
+  blog: PropTypes.object,
   likeBlog: PropTypes.func.isRequired,
-  own: PropTypes.bool.isRequired,
+  loggedInUserId: PropTypes.string.isRequired,
   removeBlog: PropTypes.func.isRequired,
 }
 
