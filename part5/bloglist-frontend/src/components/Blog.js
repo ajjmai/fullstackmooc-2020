@@ -29,11 +29,16 @@ const Blog = ({ blog, likeBlog, loggedInUserId, removeBlog }) => {
       </h2>
       <p>{blog.url}</p>
       <p>
-        likes {blog.likes}
-        <button onClick={handleLikes}>Like</button>
+        likes {blog.likes} <button onClick={handleLikes}>Like</button>
       </p>
-      <p>{creator}</p>
+      <p>added by {creator}</p>
       {own && <button onClick={handleRemove}>remove</button>}
+      <h3>comments</h3>
+      <ul>
+        {blog.comments.map((comment, index) => (
+          <li key={index}>{comment}</li>
+        ))}
+      </ul>
     </>
   )
 }
