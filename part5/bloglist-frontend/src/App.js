@@ -1,7 +1,12 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Switch, Route, useRouteMatch, Link } from 'react-router-dom'
-import { initialiseBlogs, updateBlog, deleteBlog } from './reducers/blogReducer'
+import {
+  initialiseBlogs,
+  updateBlog,
+  deleteBlog,
+  commentBlog,
+} from './reducers/blogReducer'
 import { initialiseUsers } from './reducers/userReducer'
 import { login, getUserFromToken } from './reducers/loginReducer'
 import { setNotification } from './reducers/notificationReducer'
@@ -46,6 +51,14 @@ const App = () => {
       dispatch(updateBlog(blogObject, blogCreator))
     } catch (exeption) {
       dispatch(setNotification('Updating blog failed.', 'error'))
+    }
+  }
+
+  const addComment = (blogId, comment) => {
+    try {
+      dispatch(commentBlog(blogId, comment))
+    } catch (exeption) {
+      dispatch(setNotification('Commenting blog failed.', 'error'))
     }
   }
 
@@ -117,6 +130,7 @@ const App = () => {
               likeBlog={likeBlog}
               removeBlog={removeBlog}
               loggedInUserId={loggedInUser.id}
+              addComment={addComment}
             />
           )}
         </Route>

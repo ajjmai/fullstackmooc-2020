@@ -1,7 +1,9 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, likeBlog, loggedInUserId, removeBlog }) => {
+import CommentForm from './CommentForm'
+
+const Blog = ({ blog, likeBlog, loggedInUserId, removeBlog, addComment }) => {
   if (!blog) {
     return null
   }
@@ -34,6 +36,7 @@ const Blog = ({ blog, likeBlog, loggedInUserId, removeBlog }) => {
       <p>added by {creator}</p>
       {own && <button onClick={handleRemove}>remove</button>}
       <h3>comments</h3>
+      <CommentForm addComment={addComment} blogId={blog.id} />
       <ul>
         {blog.comments.map((comment, index) => (
           <li key={index}>{comment}</li>
@@ -48,6 +51,7 @@ Blog.propTypes = {
   likeBlog: PropTypes.func.isRequired,
   loggedInUserId: PropTypes.string.isRequired,
   removeBlog: PropTypes.func.isRequired,
+  addComment: PropTypes.func.isRequired,
 }
 
 export default Blog
