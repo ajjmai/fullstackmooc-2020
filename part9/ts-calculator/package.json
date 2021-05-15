@@ -9,7 +9,8 @@
     "typescript": "^4.2.4"
   },
   "scripts": {
-    "ts-node": "ts-node"
+    "ts-node": "ts-node",
+    "calculateBmi": "ts-node bmiCalculator.ts"
   },
   "prettier": {
     "trailingComma": "es5",
