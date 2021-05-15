@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { SubTitle1, SubTitle2 } from '../StyledComponents'
 
 const User = ({ user }) => {
   if (!user) {
@@ -8,8 +9,8 @@ const User = ({ user }) => {
 
   return (
     <div>
-      <h2>{user.name}</h2>
-      <h3>added blogs</h3>
+      <SubTitle1>{user.name}</SubTitle1>
+      <SubTitle2>added blogs</SubTitle2>
       <ul>
         {user.blogs.map((blog) => (
           <li key={blog.id}>{blog.title}</li>

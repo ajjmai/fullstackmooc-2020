@@ -5,6 +5,7 @@ import { setNotification } from '../../reducers/notificationReducer'
 import { Link } from 'react-router-dom'
 import BlogForm from './BlogForm'
 import Togglable from '../Togglable'
+import { SubTitle1 } from '../StyledComponents'
 
 const BlogList = () => {
   const blogs = useSelector((state) => state.blogs)
@@ -39,7 +40,7 @@ const BlogList = () => {
       <Togglable buttonLabel='Add new blog' ref={blogFormRef}>
         <BlogForm createBlog={createBlog} />
       </Togglable>
-      <h2>Blogs</h2>
+      <SubTitle1>Blogs</SubTitle1>
       {blogs.map((blog) => (
         <p key={blog.id} style={blogStyle}>
           <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>

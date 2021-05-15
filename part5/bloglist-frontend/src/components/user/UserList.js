@@ -1,18 +1,26 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { SubTitle1, SubTitle2 } from '../StyledComponents'
 
 const UserList = () => {
   const users = useSelector((state) => state.users)
 
+  const alignCenter = {
+    textAlign: 'center',
+    verticalAlign: 'middle',
+  }
+
   return (
     <div>
-      <h2>Users</h2>
+      <SubTitle1>Users</SubTitle1>
       <table>
         <thead>
           <tr>
             <td />
-            <td>blogs created</td>
+            <td>
+              <SubTitle2>blogs created</SubTitle2>
+            </td>
           </tr>
         </thead>
         <tbody>
@@ -21,7 +29,7 @@ const UserList = () => {
               <td>
                 <Link to={`/users/${user.id}`}>{user.name}</Link>
               </td>
-              <td>{user.blogs.length}</td>
+              <td style={alignCenter}>{user.blogs.length}</td>
             </tr>
           ))}
         </tbody>

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
+import { Button, InlineButton, SubTitle1, SubTitle2 } from '../StyledComponents'
 import CommentForm from './CommentForm'
 
 const Blog = ({ blog, likeBlog, loggedInUserId, removeBlog, addComment }) => {
@@ -26,16 +27,17 @@ const Blog = ({ blog, likeBlog, loggedInUserId, removeBlog, addComment }) => {
 
   return (
     <>
-      <h2>
+      <SubTitle1>
         {blog.title} by {blog.author}
-      </h2>
-      <p>{blog.url}</p>
+      </SubTitle1>
+      <a href={blog.url}>{blog.url}</a>
       <p>
-        likes {blog.likes} <button onClick={handleLikes}>Like</button>
+        likes {blog.likes}{' '}
+        <InlineButton onClick={handleLikes}>like</InlineButton>
       </p>
       <p>added by {creator}</p>
-      {own && <button onClick={handleRemove}>remove</button>}
-      <h3>comments</h3>
+      {own && <Button onClick={handleRemove}>remove</Button>}
+      <SubTitle2>comments</SubTitle2>
       <CommentForm addComment={addComment} blogId={blog.id} />
       <ul>
         {blog.comments.map((comment, index) => (

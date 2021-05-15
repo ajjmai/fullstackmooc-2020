@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { setNotification } from '../../reducers/notificationReducer'
 import { logout } from '../../reducers/loginReducer'
+import { LogoutButton, NavText } from '../StyledComponents'
 
 const LoggedUserInfo = () => {
   const dispatch = useDispatch()
@@ -18,7 +19,8 @@ const LoggedUserInfo = () => {
 
   return (
     <>
-      {user.name} is logged in <button onClick={handleLogout}>Logout</button>
+      <NavText>{user.name} is logged in</NavText>
+      <LogoutButton onClick={handleLogout}>logout</LogoutButton>
     </>
   )
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { Button, SubTitle1, Input } from '../StyledComponents'
 
 const LoginForm = ({ handleLogin }) => {
   const [username, setUsername] = useState('')
@@ -21,11 +22,11 @@ const LoginForm = ({ handleLogin }) => {
 
   return (
     <>
-      <h2>Log in to application</h2>
+      <SubTitle1>Log in to application</SubTitle1>
       <form onSubmit={handleSubmit}>
         <div>
           username
-          <input
+          <Input
             type='text'
             value={username}
             name='Username'
@@ -34,16 +35,16 @@ const LoginForm = ({ handleLogin }) => {
         </div>
         <div>
           password
-          <input
+          <Input
             type='password'
             value={password}
             name='Password'
             onChange={handlePasswordChange}
           />
         </div>
-        <button id='login-button' type='submit'>
-          Login
-        </button>
+        <Button id='login-button' type='submit'>
+          login
+        </Button>
       </form>
     </>
   )

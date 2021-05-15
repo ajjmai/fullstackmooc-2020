@@ -10,13 +10,20 @@ import {
 import { initialiseUsers } from './reducers/userReducer'
 import { login, getUserFromToken } from './reducers/loginReducer'
 import { setNotification } from './reducers/notificationReducer'
-import Notification from './components/Notification'
+import NotificationMessage from './components/NotificationMessage'
 import LoginForm from './components/user/LoginForm'
 import UserList from './components/user/UserList'
 import User from './components/user/User'
 import BlogList from './components/blog/BlogList'
 import Blog from './components/blog/Blog'
 import LoggedUserInfo from './components/user/LoggedUserInfo'
+import {
+  Title,
+  Page,
+  Navigation,
+  NavLink,
+  Footer,
+} from './components/StyledComponents'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -94,30 +101,22 @@ const App = () => {
     ? blogs.find((blog) => blog.id === blogMatch.params.id)
     : null
 
-  const nav = {
-    paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor: 'lightGray',
-  }
-
-  const padding = {
-    padding: 5,
-  }
-
   return (
-    <>
+    <Page>
       <>
-        <div style={nav}>
-          <Link style={padding} to='/'>
-            blogs
-          </Link>
-          <Link style={padding} to='/users'>
-            users
-          </Link>
-          {loggedInUser && <LoggedUserInfo />}
-        </div>
-        <h1>Bloglist</h1>
-        <Notification />
+        {loggedInUser && (
+          <Navigation>
+            <NavLink>
+              <Link to='/'>blogs</Link>
+            </NavLink>
+            <NavLink>
+              <Link to='/users'>users</Link>
+            </NavLink>
+            <LoggedUserInfo />
+          </Navigation>
+        )}
+        <Title>Bloglist</Title>
+        <NotificationMessage />
         {!loggedInUser && <LoginForm handleLogin={handleLogin} />}
       </>
       <Switch>
@@ -136,7 +135,12 @@ const App = () => {
         </Route>
         <Route path='/'>{loggedInUser && <BlogList />}</Route>
       </Switch>
-    </>
+      <Footer>
+        <em>
+          <small>Full Stack open 2021 blog list exercise by ajjmai</small>
+        </em>
+      </Footer>
+    </Page>
   )
 }
 

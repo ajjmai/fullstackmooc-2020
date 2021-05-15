@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { InlineButton, Input } from '../StyledComponents'
 
 const CommentForm = ({ addComment, blogId }) => {
   const [comment, setComment] = useState('')
@@ -17,14 +18,14 @@ const CommentForm = ({ addComment, blogId }) => {
   return (
     <form onSubmit={commentBlog}>
       <div>
-        <input
+        <Input
           type='text'
           value={comment}
           name='Comment'
           id='comment'
           onChange={handleChange}
         />
-        <button type='submit'>add comment</button>
+        <InlineButton type='submit'>add comment</InlineButton>
       </div>
     </form>
   )
