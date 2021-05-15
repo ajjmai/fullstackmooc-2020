@@ -1,4 +1,8 @@
 export const calculateBmi = (height: number, weight: number): string => {
+  if (!height || !weight) {
+    throw new Error('parameters missing');
+  }
+
   const heightInMeters = height / 100;
   const bmi = weight / (heightInMeters * heightInMeters);
 

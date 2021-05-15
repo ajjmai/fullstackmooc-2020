@@ -4,3 +4,4 @@ part3/osa3
 part6/osa6
 
 *.eslintcache
+.vscode

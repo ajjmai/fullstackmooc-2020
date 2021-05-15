@@ -12,6 +12,14 @@ export const calculateExercises = (
   dailyExercises: Array<number>,
   target: number
 ): Result => {
+  if (!dailyExercises || !target) {
+    throw new Error('parameters missing');
+  }
+
+  if (isNaN(target) || dailyExercises.some((item: number) => isNaN(item))) {
+    throw new Error('malformatted parameters');
+  }
+
   const periodLength = dailyExercises.length;
   const trainingDays = dailyExercises.filter((item) => item > 0).length;
   const success = !dailyExercises.some((item) => item < target);
