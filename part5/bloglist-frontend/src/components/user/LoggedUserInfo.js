@@ -1,8 +1,8 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { setNotification } from '../reducers/notificationReducer'
-import { logout } from '../reducers/loginReducer'
+import { setNotification } from '../../reducers/notificationReducer'
+import { logout } from '../../reducers/loginReducer'
 
 const LoggedUserInfo = () => {
   const dispatch = useDispatch()

@@ -11,12 +11,12 @@ import { initialiseUsers } from './reducers/userReducer'
 import { login, getUserFromToken } from './reducers/loginReducer'
 import { setNotification } from './reducers/notificationReducer'
 import Notification from './components/Notification'
-import LoginForm from './components/LoginForm'
-import UserList from './components/UserList'
-import User from './components/User'
-import BlogList from './components/BlogList'
-import Blog from './components/Blog'
-import LoggedUserInfo from './components/LoggedUserInfo'
+import LoginForm from './components/user/LoginForm'
+import UserList from './components/user/UserList'
+import User from './components/user/User'
+import BlogList from './components/blog/BlogList'
+import Blog from './components/blog/Blog'
+import LoggedUserInfo from './components/user/LoggedUserInfo'
 
 const App = () => {
   const dispatch = useDispatch()
