@@ -1,12 +1,8 @@
 import React from 'react';
-
-interface Course {
-  name: string;
-  exerciseCount: number;
-}
+import { CoursePart } from './App';
 
 interface TotalProps {
-  courseParts: Course[];
+  courseParts: CoursePart[];
 }
 
 const Total = (props: TotalProps) => {
