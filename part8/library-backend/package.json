@@ -1,0 +1,18 @@
+{
+  "name": "library-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Aija Valleala",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^2.24.1",
+    "graphql": "^15.5.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
