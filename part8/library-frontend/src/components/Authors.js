@@ -6,7 +6,11 @@ const Authors = (props) => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
   const authors = useQuery(ALL_AUTHORS)
-  const [editAuthor, result] = useMutation(EDIT_AUTHOR)
+  const [editAuthor, result] = useMutation(EDIT_AUTHOR, {
+    onError: (error) => {
+      props.setError(error.graphQLErrors[0].message)
+    },
+  })
 
   useEffect(() => {
     if (result.data && result.data.editAuthor === null) {
@@ -56,11 +60,20 @@ const Authors = (props) => {
         <form onSubmit={submit}>
           <div>
             name
-            <input value={name} onChange={({ target }) => setName(target.value)} />
+            <select value={name} onChange={({ target }) => setName(target.value)}>
+                <option value='' disabled selected>
+                  Select author
+                </option>
+              {authors.data.allAuthors.map((a) => (
+                <option key={a.name} value={a.name}>
+                  {a.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             born
-            <input type='number' value={born} onChange={({ target }) => setBorn(target.value)} />
+            <input type='number' value={born} onChange={({ target }) => setBorn(target.value)} required />
           </div>
           <button type='submit'>update author</button>
         </form>
