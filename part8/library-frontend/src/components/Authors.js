@@ -19,11 +19,7 @@ const Authors = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result.data])
 
-  if (!props.show) {
-    return null
-  }
-
-  if (authors.loading) {
+  if (authors.loading || !authors.data) {
     return <div>loading...</div>
   }
 

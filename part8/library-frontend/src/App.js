@@ -43,13 +43,13 @@ const App = () => {
 
       <Notify errorMessage={errorMessage} />
 
-      <Authors show={page === 'authors'} setError={notify} token={token} />
+      {page === 'authors' && <Authors setError={notify} token={token} />}
 
-      <Books show={page === 'books'} />
+      {page === 'books' && <Books setError={notify} />}
 
-      <NewBook show={page === 'add'} setError={notify} />
+      {page === 'add' && <NewBook setError={notify} />}
 
-      <Login show={page === 'login'} setToken={setToken} setError={notify} setPage={setPage} />
+      {page === 'login' && <Login setToken={setToken} setError={notify} setPage={setPage} />}
     </div>
   )
 }

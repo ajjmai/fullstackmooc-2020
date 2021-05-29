@@ -21,15 +21,10 @@ const Login = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result.data])
 
-  if (!props.show) {
-    return null
-  }
-
   const submit = async (event) => {
     event.preventDefault()
 
     login({ variables: { username, password } })
-    props.setPage('authors')
   }
 
   return (
