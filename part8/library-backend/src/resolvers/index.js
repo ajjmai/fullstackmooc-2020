@@ -18,19 +18,24 @@ const resolvers = {
 
       return Book.find({}).populate('author')
     },
-    allAuthors: () => Author.find({}),
+    allAuthors: async () => {
+      const authors = Author.find({})
+
+      return authors.map((a) => {
+        return {
+          name: a.name,
+          born: a.born,
+          id: a.id,
+          bookCount: a.books.length,
+        }
+      })
+    },
     allGenres: async () => {
       const books = await Book.find({})
       return Array.from(new Set(books.map((b) => b.genres).flat()))
     },
     me: (root, args, context) => {
       return context.currentUser
-    },
-  },
-
-  Author: {
-    bookCount: (root) => {
-      return Book.countDocuments({ author: root })
     },
   },
 
