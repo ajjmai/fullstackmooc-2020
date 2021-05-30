@@ -4,7 +4,8 @@ const { book } = require('./types/book')
 const { userAndToken } = require('./types/user')
 const { query } = require('./query')
 const { mutation } = require('./mutation')
+const { subscription } = require('./subscription')
 
-const typeDefs = [author, book, userAndToken, query, mutation]
+const typeDefs = [author, book, userAndToken, query, mutation, subscription]
 
 module.exports = { typeDefs }
