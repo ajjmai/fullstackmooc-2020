@@ -21,7 +21,6 @@ const Books = (props) => {
     if (genre === 'all genres') {
       refetch({ genre: null })
     } else {
-      console.log(genre)
       refetch({ genre: genre })
     }
   }
