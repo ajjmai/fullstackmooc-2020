@@ -7,6 +7,13 @@ import { useStateValue, setPatientInfo } from '../state';
 import { Patient, Gender, Entry } from '../types';
 
 const EntryItem: React.FC<{ entry: Entry }> = ({ entry }) => {
+  const [{ diagnoses }] = useStateValue();
+
+  const getDiagnoseName = (code: string) => {
+    const diagnose = diagnoses.find((diagnose) => diagnose.code === code);
+    return diagnose ? diagnose.name : '';
+  };
+
   return (
     <div>
       <p>
@@ -14,7 +21,9 @@ const EntryItem: React.FC<{ entry: Entry }> = ({ entry }) => {
       </p>
       <ul>
         {entry.diagnosisCodes?.map((code) => (
-          <li key={code}>{code}</li>
+          <li key={code}>
+            {code} {getDiagnoseName(code)}
+          </li>
         ))}
       </ul>
     </div>
