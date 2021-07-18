@@ -4,7 +4,22 @@ import { useParams } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react';
 import { apiBaseUrl } from '../constants';
 import { useStateValue, setPatientInfo } from '../state';
-import { Patient, Gender } from '../types';
+import { Patient, Gender, Entry } from '../types';
+
+const EntryItem: React.FC<{ entry: Entry }> = ({ entry }) => {
+  return (
+    <div>
+      <p>
+        {entry.date} <i>{entry.description}</i>
+      </p>
+      <ul>
+        {entry.diagnosisCodes?.map((code) => (
+          <li key={code}>{code}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 const PatientInfoPage: React.FC = () => {
   const [{ patient }, dispatch] = useStateValue();
@@ -40,6 +55,10 @@ const PatientInfoPage: React.FC = () => {
       </h2>
       <p>ssn: {patient?.ssn}</p>
       <p>occupation: {patient?.occupation}</p>
+      <h3>entries</h3>
+      {patient?.entries.map((entry) => (
+        <EntryItem key={entry.id} entry={entry} />
+      ))}
     </div>
   );
 };
