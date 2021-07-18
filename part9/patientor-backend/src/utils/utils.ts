@@ -1,4 +1,4 @@
-import { Diagnose, Gender, NewPatient } from '../types';
+import { Diagnosis, Gender, NewPatient } from '../types';
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -89,7 +89,7 @@ type DiagnoseFields = {
   latin?: unknown;
 };
 
-export const toDiagnose = ({ code, name, latin }: DiagnoseFields): Diagnose => {
+export const toDiagnose = ({ code, name, latin }: DiagnoseFields): Diagnosis => {
   return {
     code: parseCode(code),
     name: parseName(name),
