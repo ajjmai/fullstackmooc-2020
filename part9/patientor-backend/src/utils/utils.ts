@@ -1,7 +1,11 @@
-import { Diagnosis, Gender, NewPatient } from '../types';
+import { Diagnosis, Gender, HealthCheckRating, NewEntry, NewPatient } from '../types';
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
+};
+
+const isNumber = (number: unknown): number is number => {
+  return typeof number === 'number' || number instanceof Number;
 };
 
 const isDate = (date: string): boolean => {
@@ -95,4 +99,111 @@ export const toDiagnose = ({ code, name, latin }: DiagnoseFields): Diagnosis => 
     name: parseName(name),
     latin: parseLatin(latin),
   };
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isValidEntryType = (entry: any): entry is NewEntry => {
+  return entry.type === 'HealthCheck' || entry.type === 'OccupationalHealthcare' || entry.type === 'Hospital';
+};
+
+const parseEntry = (entry: unknown): NewEntry => {
+  if (!entry || !isValidEntryType(entry)) {
+    throw new Error('Incorrect or missing entry type: ' + entry);
+  }
+  return entry;
+};
+
+const parseDescription = (description: unknown): string => {
+  if (!description || !isString(description)) {
+    throw new Error('Incorrect or missing description');
+  }
+  return description;
+};
+
+const parseCriteria = (criteria: unknown): string => {
+  if (!criteria || !isString(criteria)) {
+    throw new Error('Incorrect or missing criteria');
+  }
+  return criteria;
+};
+
+const parseDate = (date: unknown): string => {
+  if (!date || !isString(date) || !isDate(date)) {
+    throw new Error('Incorrect or missing date: ' + date);
+  }
+  return date;
+};
+
+const parseSpecialist = (specialist: unknown): string => {
+  if (!specialist || !isString(specialist)) {
+    throw new Error('Incorrect or missing specialist');
+  }
+  return specialist;
+};
+
+const parseDiagnosisCodes = (diagnosisCodes: unknown): Array<Diagnosis['code']> => {
+  if (!diagnosisCodes || !Array.isArray(diagnosisCodes) || !diagnosisCodes.every((code) => isString(code))) {
+    throw new Error('Incorrect or missing diagnosisCodes: ' + diagnosisCodes);
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return diagnosisCodes;
+};
+
+const isHealthCheckRating = (rating: unknown): rating is HealthCheckRating => {
+  if (!isNumber(rating)) {
+    throw new Error('Incorrect healthCheckRating: ' + rating);
+  }
+  return [0, 1, 2, 3].includes(rating);
+};
+
+const parseHealtCheckRating = (healthCheckRating: unknown): HealthCheckRating => {
+  if (healthCheckRating === null || !isHealthCheckRating(healthCheckRating)) {
+    throw new Error('Incorrect or missing healthCheckRating: ' + healthCheckRating);
+  }
+  return healthCheckRating;
+};
+
+export const toNewEntry = (newEntry: unknown): NewEntry => {
+  const validEntryType = parseEntry(newEntry);
+
+  const entry = {
+    description: parseDescription(validEntryType.description),
+    date: parseDate(validEntryType.date),
+    specialist: parseSpecialist(validEntryType.specialist),
+    diagnosisCodes: parseDiagnosisCodes(validEntryType.diagnosisCodes),
+  };
+
+  switch (validEntryType.type) {
+    case 'HealthCheck':
+      return {
+        type: validEntryType.type,
+        healthCheckRating: parseHealtCheckRating(validEntryType.healthCheckRating),
+        ...entry,
+      };
+    case 'OccupationalHealthcare':
+      return {
+        type: validEntryType.type,
+        employerName: parseName(validEntryType.employerName),
+        sickLeave: {
+          startDate: parseDate(validEntryType.sickLeave?.startDate),
+          endDate: parseDate(validEntryType.sickLeave?.endDate),
+        },
+        ...entry,
+      };
+    case 'Hospital':
+      return {
+        type: validEntryType.type,
+        discharge: {
+          date: parseDate(validEntryType.discharge.date),
+          criteria: parseCriteria(validEntryType.discharge.criteria),
+        },
+        ...entry,
+      };
+    default:
+      return assertNever(validEntryType);
+  }
+};
+
+const assertNever = (value: never): never => {
+  throw new Error(`Unhandled discriminated union member: ${JSON.stringify(value)}`);
 };
