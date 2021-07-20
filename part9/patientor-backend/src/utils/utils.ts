@@ -163,6 +163,21 @@ const parseHealtCheckRating = (healthCheckRating: unknown): HealthCheckRating =>
   return healthCheckRating;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const parseSickLeave = (sickLeave: any): { startDate: string; endDate: string } => {
+  if (!sickLeave || Object.keys(sickLeave).length === 0) {
+    return { startDate: '', endDate: '' };
+  }
+
+  if (!sickLeave.startDate && !sickLeave.endDate) {
+    return { startDate: '', endDate: '' };
+  }
+  return {
+    startDate: parseDate(sickLeave?.startDate),
+    endDate: parseDate(sickLeave?.endDate),
+  };
+};
+
 export const toNewEntry = (newEntry: unknown): NewEntry => {
   const validEntryType = parseEntry(newEntry);
 
@@ -184,10 +199,7 @@ export const toNewEntry = (newEntry: unknown): NewEntry => {
       return {
         type: validEntryType.type,
         employerName: parseName(validEntryType.employerName),
-        sickLeave: {
-          startDate: parseDate(validEntryType.sickLeave?.startDate),
-          endDate: parseDate(validEntryType.sickLeave?.endDate),
-        },
+        sickLeave: parseSickLeave(validEntryType.sickLeave),
         ...entry,
       };
     case 'Hospital':

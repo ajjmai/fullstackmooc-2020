@@ -29,7 +29,7 @@ const OccupationalHealtcare: React.FC<{ entry: OccupationalHealthcareEntry }> =
           entry={entry}
           icon={<Icon name="stethoscope" size="big" />}
         />
-        {entry.sickLeave && (
+        {entry.sickLeave?.startDate && (
           <p>
             {`Sick leave from ${entry.sickLeave?.startDate} to 
             ${entry.sickLeave?.endDate}.`}

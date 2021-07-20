@@ -7,7 +7,7 @@ import { useStateValue, setPatientInfo, addEntry } from '../state';
 import { Patient, Gender } from '../types';
 import EntryDetails from './EntryDetails';
 import AddEntryModal from '../AddEntryModal';
-import { EntryFormValues } from '../AddEntryModal/AddEntryForm';
+import { EntryFormValues } from '../AddEntryModal/EntryFromWrapper';
 
 const PatientInfoPage: React.FC = () => {
   const [{ patient }, dispatch] = useStateValue();
